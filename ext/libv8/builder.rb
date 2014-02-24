@@ -1,4 +1,5 @@
 require 'mkmf'
+require 'debugger'
 require File.expand_path '../compiler', __FILE__
 require File.expand_path '../arch', __FILE__
 require File.expand_path '../make', __FILE__
@@ -60,7 +61,7 @@ module Libv8
       # at the head of PATH. That way all commands that inherit this environment
       # will use ./python -> python2
       if python_version !~ /^2/
-        unless system 'which python2 2>&1 > /dev/null'
+        unless system 'python2 2>&1 > /dev/null'
           fail "libv8 requires python 2 to be installed in order to build, but it is currently #{python_version}"
         end
         `ln -fs #{`which python2`.chomp} python`
@@ -92,8 +93,8 @@ module Libv8
     end
 
     def python_version
-      if system 'which python 2>&1 > /dev/null'
-        `python -c 'import platform; print(platform.python_version())'`.chomp
+      if system 'which python'
+        `python -c "import platform; print(platform.python_version())"`.chomp
       else
         "not available"
       end
